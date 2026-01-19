@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fire Simulation</title>
+    <style>
+      html, body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;      /* 縦中央 */
+        justify-content: center;  /* 横中央 */
+        font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        background: #f6f7f9;
+      }
+
+      .page {
+        width: max-content; /* グリッドの実寸に合わせる */
+        padding: 24px 28px;
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 520px 520px 160px;
+        grid-template-rows: auto 120px;
+        gap: 16px;
+        align-items: start;
+      }
+      .panel {
+        border: 1px solid #ddd;
+        padding: 8px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+      }
+      .tank {
+        height: 420px;
+        width: 120px;
+        border: 2px solid #2b2b2b;
+        position: relative;
+        margin: 0 auto;
+        background: #f7f7f7;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .tank .water {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 55%;
+        background: #8fd3ff;
+      }
+
+      /* ボタン群：中央揃え */
+      .buttons {
+        grid-column: 1 / -1;       /* 3列すべてをまたぐ */
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        height: 120px;
+      }
+
+      button {
+        min-width: 120px;
+        min-height: 56px;
+        font-size: 18px;
+        border-radius: 10px;
+        border: 1px solid #d0d0d0;
+        background: #fff;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>消火シミュレーション</h1>
+
+      <div class="layout">
+        <div class="panel">
+          <img id="img-fire" width="500" height="500" alt="fire" />
+        </div>
+
+        <div class="panel">
+          <img id="img-elev" width="500" height="500" alt="elevation" />
+        </div>
+
+        <div class="panel">
+          <div style="text-align:center; font-weight:700; margin-bottom:8px;">水タンク</div>
+          <div class="tank">
+            <div class="water" id="tank-water"></div>
+          </div>
+
+          <div id="tank-water-text"
+               style="margin-top: 8px; text-align:center; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;">
+            --
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button id="btn-water" type="button">消火</button>
+          <button id="btn-rock" type="button">救援</button>
+          <button id="btn-start" type="button">Start</button>
+        </div>
+      </div>
+
+      <script>
+        const POLL_INTERVAL_MS = {{ poll_interval_ms|default:200 }};
+        const imgFire = document.getElementById("img-fire");
+        const imgElev = document.getElementById("img-elev");
+
+        function refreshImages() {
+          // キャッシュ回避のためにts付与
+          const ts = Date.now();
+          imgFire.src = "{% url 'simulation:api_frame' %}?kind=fire&ts=" + ts;
+          imgElev.src = "{% url 'simulation:api_frame' %}?kind=elev&ts=" + ts;
+        }
+
+        async function post(url) {
+          const res = await fetch(url, { method: "POST", headers: { "X-CSRFToken": getCsrfToken() }});
+          return await res.json();
+        }
+
+        function getCsrfToken() {
+          // Django標準cookieから読む簡易版
+          const m = document.cookie.match(/csrftoken=([^;]+)/);
+          return m ? m[1] : "";
+        }
+
+        document.getElementById("btn-start").addEventListener("click", async () => {
+          const data = await post("{% url 'simulation:api_toggle_pause' %}");
+          // is_paused=false なら動いている状態
+          document.getElementById("btn-start").textContent = data.is_paused ? "Start" : "Pause";
+        });
+
+        document.getElementById("btn-water").addEventListener("click", async () => {
+          await post("{% url 'simulation:api_toggle_water' %}");
+        });
+
+        const btnRelief = document.getElementById("btn-rock");
+
+        btnRelief.addEventListener("click", async () => {
+          const data = await post("{% url 'simulation:api_relief' %}");
+          if (data.ok) {
+            // 水量UI更新
+            if (typeof data.water_remaining_l === "number") setTankUI(data.water_remaining_l);
+            // すぐ無効化（クールダウン開始）
+            btnRelief.disabled = true;
+            btnRelief.textContent = `救援 (${data.cooldown_remaining_steps})`;
+          }
+          // 状態を再取得して表示整合
+          refreshStatus();
+        });
+
+        // 初回表示
+        refreshImages();
+        // 自動更新（fps調整はここ）
+        setInterval(refreshImages, POLL_INTERVAL_MS);
+
+        const imgFireEl = document.getElementById("img-fire");
+
+        let isDrawing = false;
+
+        function getImageRelativePos(evt, imgEl) {
+          const rect = imgEl.getBoundingClientRect();
+          const x = evt.clientX - rect.left;
+          const y = evt.clientY - rect.top;
+          const nx = Math.max(0, Math.min(1, x / rect.width));
+          const ny = Math.max(0, Math.min(1, y / rect.height));
+          return { nx, ny };
+        }
+
+        function toGridIJ(nx, ny, gridSize) {
+          const i = Math.min(gridSize - 1, Math.max(0, Math.floor(ny * gridSize)));
+          const j = Math.min(gridSize - 1, Math.max(0, Math.floor(nx * gridSize)));
+          return { i, j };
+        }
+
+        // タンクの最大容量（L）
+        const WATER_TANK_CAPACITY_L = 9500 * 3;
+
+        function setTankUI(waterRemainingL) {
+          const fill = document.getElementById("tank-water");
+          const text = document.getElementById("tank-water-text");
+
+          const pct = Math.max(0, Math.min(100, (waterRemainingL / WATER_TANK_CAPACITY_L) * 100));
+
+          if (fill) fill.style.height = pct + "%";
+          if (text) text.textContent = `${waterRemainingL} L / ${WATER_TANK_CAPACITY_L} L`;
+        }
+
+        async function refreshStatus() {
+          const res = await fetch("{% url 'simulation:api_status' %}", { method: "GET" });
+          if (!res.ok) return;
+          const data = await res.json();
+          if (!data.ok) return;
+
+          setTankUI(data.water_remaining_l);
+
+          // ★救援ボタン制御
+          if (data.relief_available) {
+            btnRelief.disabled = false;
+            btnRelief.textContent = "救援";
+          } else {
+            btnRelief.disabled = true;
+            btnRelief.textContent = `救援 (${data.relief_cooldown_remaining_steps})`;
+          }
+        }
+
+        async function placeWaterAtEvent(evt) {
+          evt.preventDefault();
+
+          const GRID_SIZE = 200; // TODO: meta API で置き換え
+
+          const { nx, ny } = getImageRelativePos(evt, imgFireEl);
+          const { i, j } = toGridIJ(nx, ny, GRID_SIZE);
+
+          const resp = await fetch("{% url 'simulation:api_place_water' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCsrfToken(),
+            },
+            body: JSON.stringify({ i, j, radius: 1 }),
+          });
+
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && typeof data.water_remaining_l === "number") {
+              setTankUI(data.water_remaining_l);
+            } else {
+              refreshStatus();
+            }
+          }
+        }
+
+        refreshStatus();
+        setInterval(refreshStatus, 1000);
+
+        imgFireEl.addEventListener("mousedown", (evt) => {
+          isDrawing = true;
+          placeWaterAtEvent(evt);
+        });
+
+        window.addEventListener("mouseup", () => {
+          isDrawing = false;
+        });
+
+        imgFireEl.addEventListener("mousemove", (evt) => {
+          if (!isDrawing) return;
+          placeWaterAtEvent(evt);
+        });
+
+        // 画像選択・ドラッグを抑制
+        imgFireEl.style.userSelect = "none";
+        imgFireEl.style.webkitUserDrag = "none";
+      </script>
+    </div>
+  </body>
+</html>

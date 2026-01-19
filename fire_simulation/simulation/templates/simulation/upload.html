@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Upload CSV</title>
+    <style>
+      html, body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;      /* 縦中央 */
+        justify-content: center;  /* 横中央 */
+        font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        background: #f6f7f9;
+      }
+      .page {
+        width: min(640px, 92vw);
+        background: #fff;
+        padding: 24px 28px;
+        border-radius: 12px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+      }
+      .page h1 {
+        margin: 0 0 16px;
+        font-size: 20px;
+      }
+      .page form p {
+        margin: 12px 0;
+      }
+      .page input[type="file"] {
+        display: block;
+        margin-top: 6px;
+      }
+      .actions {
+        margin-top: 16px;
+      }
+      .actions button {
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 10px;
+        background: #2563eb;
+        color: #fff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>CSVアップロード</h1>
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="actions">
+          <button type="submit">開始</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
