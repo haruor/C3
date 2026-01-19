@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>君だけの星座と神話が完成！</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="results-body">
+
+    <div class="results-container">
+        <h1 class="result-title">君だけの星座と神話が完成！</h1>
+        <p>もとになった写真: <strong>{{ uploaded_image_name }}</strong></p>
+
+        <div class="image-container">
+            <div class="constellation-card">
+                <h2>もとになった写真</h2>
+                <div class="image-wrapper">
+                    <img src="{{ uploaded_image_url }}" alt="アップロードされた写真" class="constellation-image">
+                </div>
+            </div>
+            <div class="constellation-card">
+                <h2>本物の星になった星座</h2>
+                <div class="image-wrapper">
+                    <img src="{{ real_image }}" alt="本物の星になった星座" class="constellation-image">
+                </div>
+            </div>
+        </div>
+
+        <div class="myth-container">
+            <h2 class="myth-title">✨ 君が描いた星座の神話 ✨</h2>
+            <div id="myth-story" class="myth-story">
+                {{ myth_text }}
+            </div>
+            <div class="navigation-buttons">
+                <button id="prev-button">まえへ</button>
+                <button id="next-button">つぎへ</button>
+            </div>
+        </div>
+
+        <a href="{% url 'index' %}" class="return-button">もう一度さがす</a>
+    </div>
+
+    <script src="{% static 'ja/script.js' %}"></script>
+</body>
+</html>

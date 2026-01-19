@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星座ジェネレーター</title>
+    {% load static %} {# ★★★ この行を追加 ★★★ #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> {# ★★★ この行を追加 ★★★ #}
+    <style>
+        body { font-family: sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        form { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        input[type="file"] { margin-bottom: 10px; }
+        input[type="submit"] { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        input[type="submit"]:hover { background-color: #45a049; }
+
+        /* ★★★ ローディングスピナー用のスタイルをここに追加（またはstyle.cssに） ★★★ */
+        #loading-overlay {
+            display: none; /* 初期状態では非表示 */
+            position: fixed; /* 画面全体を覆う */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            z-index: 9999; /* 他の要素より手前に表示 */
+            justify-content: center; /* 中央寄せ */
+            align-items: center; /* 中央寄せ */
+            flex-direction: column; /* 縦並び */
+        }
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #4CAF50; /* スピナーの色 */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite; /* アニメーション */
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* ★★★ ここまで追加 ★★★ */
+    </style>
+</head>
+<body class="index-body">
+    <main>
+        <section class="upload-section">
+            <h2 class="section-title">宇宙へ行こう！</h2>
+    
+            <p class="section-description">写真を選ぶだけで、君だけの星座と神話が生まれるよ。</p>
+            
+            <form action="/upload/" method="post" enctype="multipart/form-data" 
+      onsubmit="return showLoading();"
+      data-gif-liftoff="{% static 'images/rocket_liftoff.gif' %}"
+      data-gif-orbit="{% static 'images/rocket_orbit.gif' %}">
+                {% csrf_token %}
+                <div class="file-input-wrapper">
+                    <input type="file" name="file" id="file-input" accept="image/*" required onchange="previewImage(event)">
+                    <label for="file-input" class="custom-file-upload">写真を宇宙へ送る</label>
+                </div>
+            
+                <div class="preview-container">
+                    <img id="preview-image" src="#" alt="プレビュー" style="display:none;">
+                </div>
+            
+                <button type="submit" id="submit-button" class="action-button">星空に描く！</button>
+            </form>
+        </section>
+    </main>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-gif-container"></div> 
+        
+        <p class="loading-text">きみの写真を宇宙へ発射！</p>
+        <p class="loading-sub-text">星座と神話を生成中...</p>
+    </div>
+    <div id="imagePreview" style="margin-top:10px;">
+        <img id="preview" src="#" alt="Image Preview" style="max-width:200px; max-height:200px; display:none;">
+    </div>
+
+    <script>
+        // previewImage関数は既存のまま
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // ★★★ showLoading関数をここに追加 ★★★
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex'; // flexにして中央寄せを有効にする
+            // フォームのボタンを無効化して二重送信を防ぐ
+            document.querySelector('input[type="submit"]').disabled = true;
+            // ファイル入力も無効化
+            document.querySelector('input[type="file"]').disabled = true;
+        }
+        // ★★★ ここまで追加 ★★★
+    </script>
+
+<script src="{% static 'ja/script.js' %}"></script> </body>
+</body>
+</html>

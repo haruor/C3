@@ -1,0 +1,492 @@
+/* ==================================== */
+/* ページ全体と基本スタイル */
+/* ==================================== */
+
+/* ==================================== */
+/* ページ全体と基本スタイル */
+/* ==================================== */
+
+/* トップページ用のスタイル */
+.index-body {
+    /* ▼ 背景画像と半透明グラデーションを重ねる ▼ */
+    background: 
+        linear-gradient(rgba(13, 26, 45, 0.8), rgba(3, 6, 20, 0.1)), 
+        url('../images/galaxy_bg.jpg');
+    
+    background-size: cover; /* 画面全体を覆うように調整 */
+    background-position: center; /* 画像を中央に配置 */
+    background-attachment: fixed; /* スクロールしても背景を固定 */
+    
+    /* ...他のスタイルはそのまま... */
+    color: #e0f2f1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 結果画面用のスタイル */
+/*.results-body {
+    background: linear-gradient(to bottom, #0d1a2d, #030614);
+    color: #e0f2f1;
+    min-height: 100vh;
+    padding: 2rem;
+}*/
+
+h1, h2 {
+    font-family: 'Verdana', sans-serif; /* カクカクした雰囲気に近いフォント */
+    color: #ffd700; /* ゴールドっぽい色で強調 */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 影で立体感を */
+}
+
+/* ==================================== */
+/* メインコンテンツのレイアウト */
+/* ==================================== */
+
+main {
+    max-width: 800px;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.05); /* 半透明なパネル効果 */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    text-align: center;
+}
+
+/* セクションのタイトルと説明文 */
+.upload-section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 2.5em;
+    margin-bottom: 0.5rem;
+}
+
+.section-description {
+    font-size: 1.2em;
+    margin-bottom: 1.5rem;
+}
+
+/* ==================================== */
+/* フォームとボタンのスタイル */
+/* ==================================== */
+
+form {
+    display: flex;
+    flex-direction: column; /* 縦並びに変更 */
+    justify-content: center;
+    align-items: center; /* これで要素が中央揃えになります */
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+/* カスタムファイルアップロードボタンのコンテナ */
+.file-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* ブラウザ標準のファイル入力ボタンを非表示にする */
+#file-input {
+    display: none;
+}
+
+/* カスタムアップロードボタン（labelタグ）のスタイル */
+.custom-file-upload {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: #2196f3; /* 鮮やかな青色 */
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: #1976d2;
+    transform: translateY(-3px); /* 少し上に浮き上がる効果 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-file-upload:active {
+    transform: translateY(0); /* クリック時の押し込み効果 */
+}
+
+.preview-container {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 10000px;
+
+    /* 枠線や背景色を非表示にし、写真がない時はスペースができないようにする */
+    /* min-height: 200px; */ /* 高さを削除 */
+    /* background-color: rgba(0, 0, 0, 0.2); */ /* 背景色を削除 */
+    /* border: 2px dashed #555; */ /* 枠線を削除 */
+    
+    /* 以下の設定は画像表示のために残します */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* プレビュー画像 */
+#preview-image {
+    /* 強制的に中央揃えにするための設定 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* 画像の最大サイズと見た目の設定 */
+    max-width: 90%; /* コンテナより少し小さく */
+    max-height: 90%; /* コンテナより少し小さく */
+    height: auto;
+    border-radius: 8px;
+    background-color: black;
+}
+
+/* アクションボタン（提出ボタン）のスタイル */
+.action-button {
+    padding: 1rem 3rem;
+    background-color: #4caf50; /* コントラストの効いた緑色 */
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.action-button:hover {
+    background-color: #388e3c;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+/* ==================================== */
+/* ローディング画面のスタイル（ロケットアニメーション） */
+/* ==================================== */
+/* この部分は以前のコードをそのまま貼り付けてください */
+/* ==================================== */
+/* ロケットとローディングアニメーション */
+/* ==================================== */
+
+/* ローディングオーバーレイの基本スタイル */
+.loading-overlay {
+    display: none; /* JavaScriptで表示を制御 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0d1a2d;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* GIFを表示するためのコンテナ */
+.loading-gif-container {
+    width: 150px; /* GIFの幅に合わせて調整 */
+    height: 150px; /* GIFの高さに合わせて調整 */
+    margin-bottom: 20px;
+    
+    /* ★★★ ここでGIFファイルを指定します ★★★ */
+    background-image: url('../images/rocket_loaing.gif');
+    
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-image 0.5s ease-in-out; /* GIFが滑らかに切り替わる効果 */
+}
+
+/* ローディングテキストのスタイル */
+.loading-text {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #ffd700;
+    z-index: 20;
+}
+
+.loading-sub-text {
+    font-size: 1.2em;
+    color: #bbdefb;
+    z-index: 20;
+}
+
+/* 新しいロケットGIFのスタイル */
+.spinner {
+    width: 100px; /* GIFのサイズに合わせて調整 */
+    height: 100px; /* GIFのサイズに合わせて調整 */
+    background-image: url('../images/rocket_loading.gif'); /* ← CSSファイルからの正しい相対パス */
+    background-size: contain; /* コンテナに合わせて画像を収める */
+    background-repeat: no-repeat; /* 繰り返しなし */
+    background-position: center; /* 中央に配置 */
+    /* 以前のCSSアニメーションは削除 */
+    border: none; /* 以前のボーダーも不要 */
+    border-radius: 0; /* GIFなので角丸も不要 */
+    animation: none; /* 以前のアニメーションを無効化 */
+}
+
+/* @keyframes spin はもう使わないので削除してもOK */
+/* @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} */
+
+/* results.html 用のスタイル（今後移動する可能性があるもの） */
+.image-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.constellation-card {
+    text-align: center;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    margin: 10px;
+}
+.constellation-card img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.myth-section {
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+h2.myth-title {
+    color: #555;
+}
+p.myth-content {
+    line-height: 1.6;
+    color: #333;
+    white-space: pre-wrap;
+}
+a {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #007BFF;
+}
+a:hover {
+    text-decoration: underline;
+}
+/* ==================================== */
+/* 結果画面 (results.html) のスタイル */
+/* ==================================== */
+
+/* 結果画面 (results.html) のスタイル */
+.results-body {
+    /* ▼ 背景画像と半透明グラデーションを重ねる ▼ */
+    background: 
+        linear-gradient(rgba(13, 26, 45, 0.8), rgba(3, 6, 20, 0.1)), 
+        url('../images/galaxy_bg.jpg');
+
+    background-size: cover; /* 画面全体を覆うように調整 */
+    background-position: center; /* 画像を中央に配置 */
+    background-attachment: fixed; /* スクロールしても背景を固定 */
+    
+    /* ...他のスタイルはそのまま... */
+    color: #e0f2f1;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.results-container {
+    max-width: 900px;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.05); /* 半透明なパネル効果 */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    text-align: center;
+    margin: auto;
+}
+
+.result-title {
+    font-size: 2.2em;
+    margin-bottom: 1.5rem;
+}
+
+.image-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    flex-wrap: wrap; /* スマホ表示などで折り返す */
+    margin-bottom: 2rem;
+}
+
+.constellation-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    width: 45%;
+    min-width: 300px; /* 最小幅を指定 */
+}
+
+.constellation-card h2 {
+    font-size: 1.5em;
+    margin-bottom: 1rem;
+}
+
+.image-wrapper {
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.constellation-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.myth-container {
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid #555;
+    margin-bottom: 2rem;
+}
+
+.myth-title {
+    font-size: 1.8em;
+    margin-bottom: 1rem;
+    color: #fff; /* 文字の中心を白にして輝きを表現 */
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #ffd700, /* 黄色い光彩を追加 */
+        0 0 30px #ffd700;
+}
+
+.myth-story {
+    font-size: 1.2em;
+    line-height: 1.8;
+    min-height: 120px; /* テキストが短くても高さが維持されるように */
+    display: flex;
+    justify-content: flex-start; /* ← これを「左詰め」に変更 */
+    align-items: center;
+    text-align: left;
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+    white-space: pre-wrap; /* 改行を反映 */
+    color: #fff;
+}
+
+.navigation-buttons {
+    display: none; /* JSで表示を制御 */
+    justify-content: center;
+    gap: 2rem;
+}
+
+.navigation-buttons button {
+    padding: 0.8rem 2rem;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: #2196f3;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.navigation-buttons button:hover {
+    background-color: #1976d2;
+    transform: translateY(-3px);
+}
+
+.navigation-buttons button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+#prev-button, #next-button {
+    visibility: hidden; /* JSで表示を制御 */
+}
+
+.return-button {
+    display: inline-block;
+    padding: 1rem 3rem;
+    background-color: #4caf50;
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.return-button:hover {
+    background-color: #388e3c;
+    transform: translateY(-3px);
+}
+/* トップ画面の中央揃えのためのスタイル */
+.top-main-centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直方向の中央揃え */
+    align-items: center;     /* 水平方向の中央揃え */
+    min-height: calc(100vh - 60px); /* ヘッダーの高さなどを考慮して調整 */
+    text-align: center; /* テキストも中央揃え */
+}
+
+/* ヘッダーのh1も中央に */
+header h1 {
+    text-align: center;
+    width: 100%; /* 親要素いっぱいに広げる */
+}
+
+/* アップロードセクションは非表示にしたいので、HTMLのstyle属性で対応 */
+/* もしCSSで非表示にする場合は以下を追加 (今回はHTMLで対応済み) */
+/* .upload-section {
+    display: none;
+} */
+
+/* ==================================== */
+/* レスポンシブ対応 (スマートフォンなど) */
+/* ==================================== */
+
+/* 画面の幅が768px以下の場合に適用されるスタイル */
+@media (max-width: 768px) {
+    .image-container {
+        flex-direction: column; /* カードを縦に並べる */
+        align-items: center;    /* カードを中央に寄せる */
+    }
+
+    .constellation-card {
+        width: 90%; /* 画面幅に対して90%の幅にする */
+        min-width: 0; /* 最低幅の指定をリセット */
+        margin-bottom: 1.5rem; /* カードの間に余白を追加 */
+    }
+
+    .result-title {
+        font-size: 1.8em; /* タイトルを少し小さくして見やすくする */
+    }
+}
