@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pipe Organ Simulator (Full 3D / Modular)</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Three.js & OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="panel header-panel">
+            <h1>Pipe Organ Digital Twin (Full 3D)</h1>
+            <div id="step-val" style="font-family: monospace; color: #64748b;">Step: 0</div>
+        </div>
+
+        <div class="panel view-panel">
+            <div id="resonance-badge" class="status-badge">風切り音のみ (非発音)</div>
+            <div id="canvas-container" title="マウスドラッグで視点を自由に回転・移動できます"></div>
+        </div>
+
+        <div class="panel controls">
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button id="audio-btn" style="flex: 1;">PLAY AUDIO</button>
+                <button id="perfect-c-btn" style="flex: 1; background: var(--accent); color: white;">Perfect C-Chord</button>
+            </div>
+
+            <div class="control-group">
+                <label><span>風速 (m/s)</span> <span id="wind-ms-display">15</span></label>
+                <input type="range" id="wind-slider" min="0" max="30" step="1" value="15">
+            </div>
+            <div class="control-group">
+                <label><span>パイプ幅 (W)</span> <span id="width-display">10</span></label>
+                <input type="range" id="width-slider" min="5" max="50" step="1" value="10">
+            </div>
+            <div class="control-group">
+                <label><span>パイプ深さ (L)</span> <span id="depth-display">30</span></label>
+                <input type="range" id="depth-slider" min="10" max="80" step="1" value="30">
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="chord-mode-toggle">
+                    <span style="font-weight: bold; color: var(--accent);">和音モード (Chord Mode)</span>
+                </label>
+            </div>
+
+            <div class="metrics">
+                <div class="metric-row">局所風速 <span><span class="metric-val" id="local-v-val">0.0</span> <span
+                            style="font-size: 0.8rem; color:#888" id="local-v-ms-val">(0.0 m/s)</span></span></div>
+                <div class="metric-row">気柱共鳴周波数 <span style="color:var(--alert);"><span class="metric-val"
+                            id="freq-val">0.0</span> Hz</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Modules -->
+    <script src="/static/js/viewer3d.js?v=6"></script>
+    <script src="/static/js/main.js?v=4"></script>
+</body>
+
+</html>

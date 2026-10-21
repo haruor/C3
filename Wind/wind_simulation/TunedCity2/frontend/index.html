@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual City Geometry Visualization</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        #instrument-panel {
+            position: fixed; bottom: 20px; left: 20px;
+            background: rgba(20,20,20,0.88);
+            color: #eee; padding: 14px 18px; border-radius: 8px;
+            font-family: monospace; z-index: 100; min-width: 210px;
+        }
+        #instrument-panel .inst-label { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
+        #instrument-panel .inst-row { margin-bottom: 5px; }
+        .inst-status { color: #aaa; }
+        .inst-resonating { color: #ffaa44; font-weight: bold; }
+        #inst-audio-btn {
+            margin-top: 10px; width: 100%; padding: 6px 0;
+            background: #333; color: #eee; border: 1px solid #555;
+            border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+        }
+        #inst-audio-btn.inst-active { background: #c04000; border-color: #ff7733; color: #fff; }
+        #instrument-panel label { display: block; margin-top: 8px; font-size: 0.85rem; cursor: pointer; }
+        #inst-organ-readout {
+            margin: 8px 0; font-size: 0.75rem; line-height: 1.5;
+            color: #ccc; white-space: pre; font-family: monospace;
+        }
+    </style>
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <div id="instrument-panel">
+        <div class="inst-label">パイプオルガン</div>
+        <div class="inst-row">風速: <strong><span id="inst-wind-speed">--</span> m/s</strong></div>
+        <div class="inst-row">周波数: <strong><span id="inst-freq">---</span> Hz</strong></div>
+        <div id="inst-organ-readout"></div>
+        <div id="inst-status" class="inst-status">風切り音のみ</div>
+        <button id="inst-audio-btn">PLAY AUDIO</button>
+        <label><input type="checkbox" id="inst-chord-toggle"> 和音モード</label>
+        <label><input type="checkbox" id="inst-sub-toggle" checked> サブオルガン (496Hz)</label>
+    </div>
+
+    <script src="js/scene.js"></script>
+    <script src="js/buildings.js"></script>
+    <script src="js/wind.js"></script>
+    <script src="js/wind_cfd.js"></script>
+    <script src="js/instrument.js"></script>
+
+    <script>
+        window.onload = () => {
+            initScene();
+            createBuildings();
+            initWindParticles();
+            initInstrument();
+            loadCFDWindField();  // 非同期 fetch — 完了前はフォールバック動作
+            animate();
+        };
+    </script>
+</body>
+</html>

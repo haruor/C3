@@ -1,0 +1,56 @@
+{
+  "scene": "TunedCity",
+  "description": "Funnel buildings: outer+inner rectangles + 8-step staircase approximating diagonal funnel wall (z=0-80).",
+  "domain": {
+    "x_min": -200, "x_max": 200,
+    "z_min": -50,  "z_max": 250,
+    "height": 200
+  },
+  "inlet_velocity_ms": 10.0,
+  "buildings": [
+    {
+      "id": "left_outer",
+      "type": "box",
+      "x_min": -75, "x_max": -50,
+      "z_min": 0,   "z_max": 180,
+      "height": 100
+    },
+    {
+      "id": "left_inner",
+      "type": "box",
+      "x_min": -50, "x_max": -10,
+      "z_min": 80,  "z_max": 180,
+      "height": 100
+    },
+    {
+      "id": "right_outer",
+      "type": "box",
+      "x_min": 50,  "x_max": 75,
+      "z_min": 0,   "z_max": 180,
+      "height": 100
+    },
+    {
+      "id": "right_inner",
+      "type": "box",
+      "x_min": 10,  "x_max": 50,
+      "z_min": 80,  "z_max": 180,
+      "height": 100
+    },
+    { "id": "left_funnel_0", "type": "box", "x_min": -50, "x_max": -45, "z_min":  0, "z_max": 10, "height": 100 },
+    { "id": "left_funnel_1", "type": "box", "x_min": -50, "x_max": -40, "z_min": 10, "z_max": 20, "height": 100 },
+    { "id": "left_funnel_2", "type": "box", "x_min": -50, "x_max": -35, "z_min": 20, "z_max": 30, "height": 100 },
+    { "id": "left_funnel_3", "type": "box", "x_min": -50, "x_max": -30, "z_min": 30, "z_max": 40, "height": 100 },
+    { "id": "left_funnel_4", "type": "box", "x_min": -50, "x_max": -25, "z_min": 40, "z_max": 50, "height": 100 },
+    { "id": "left_funnel_5", "type": "box", "x_min": -50, "x_max": -20, "z_min": 50, "z_max": 60, "height": 100 },
+    { "id": "left_funnel_6", "type": "box", "x_min": -50, "x_max": -15, "z_min": 60, "z_max": 70, "height": 100 },
+    { "id": "left_funnel_7", "type": "box", "x_min": -50, "x_max": -10, "z_min": 70, "z_max": 80, "height": 100 },
+    { "id": "right_funnel_0", "type": "box", "x_min": 45, "x_max": 50, "z_min":  0, "z_max": 10, "height": 100 },
+    { "id": "right_funnel_1", "type": "box", "x_min": 40, "x_max": 50, "z_min": 10, "z_max": 20, "height": 100 },
+    { "id": "right_funnel_2", "type": "box", "x_min": 35, "x_max": 50, "z_min": 20, "z_max": 30, "height": 100 },
+    { "id": "right_funnel_3", "type": "box", "x_min": 30, "x_max": 50, "z_min": 30, "z_max": 40, "height": 100 },
+    { "id": "right_funnel_4", "type": "box", "x_min": 25, "x_max": 50, "z_min": 40, "z_max": 50, "height": 100 },
+    { "id": "right_funnel_5", "type": "box", "x_min": 20, "x_max": 50, "z_min": 50, "z_max": 60, "height": 100 },
+    { "id": "right_funnel_6", "type": "box", "x_min": 15, "x_max": 50, "z_min": 60, "z_max": 70, "height": 100 },
+    { "id": "right_funnel_7", "type": "box", "x_min": 10, "x_max": 50, "z_min": 70, "z_max": 80, "height": 100 }
+  ]
+}
